@@ -11,8 +11,8 @@ op: c4d.BaseObject | None  # The primary selected object in `doc`. Can be `None`
 
 def main() -> None:
     #A ADAPTER A ADAPTER A ADAPTER
-    nb_x = 6
-    nb_z = 4
+    nb_x = 3
+    nb_z = 2
     
     mg = op.GetMg()
     l_x = op.GetRad().x*2
