@@ -5,7 +5,7 @@ import os.path
 from pathlib import Path
 
 CONTAINER_ORIGIN = 1026473
-
+NB_ALERT = 6
 
 def getCalageFromGeoTif(fn):
     """retourne la valeur du pixel en x et y et la position du coin en haut à gauche en x et y
@@ -181,12 +181,16 @@ def importGeoTif(fn_tif,doc):
 
 def main():
 
-    fn_tif = c4d.storage.LoadDialog(type=c4d.FILESELECTTYPE_IMAGES, title="Choose a GeoTif Image:")
+    path = tif = c4d.storage.LoadDialog(flags=c4d.FILESELECT_DIRECTORY, title="Choose a GeoTif Image directory:")
 
-    if not fn_tif : return
-    fn_tif = Path(fn_tif)
+    if not path : return
+    #Si on a plus que 6 tif on demande confirmation
+    if len(list(Path(path).rglob('*.tif'))) > NB_ALERT:
+        if not c4d.gui.QuestionDialog(f'Are you sure you want to import {len(list(Path(path).rglob("*.tif")))} files ?'):
+            return
 
-    importGeoTif(fn_tif,doc)
+    for fn_tif in sorted(Path(path).rglob('*.tif'),reverse = True):
+        importGeoTif(fn_tif,doc)
     c4d.EventAdd()
     return
 
