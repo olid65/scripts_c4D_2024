@@ -2,7 +2,7 @@ import c4d
 from pyproj import Transformer
 from urllib import request
 import json
-
+import random
 
 doc: c4d.documents.BaseDocument  # The currently active document.
 op: c4d.BaseObject | None  # The primary selected object in `doc`. Can be `None`.
@@ -16,7 +16,7 @@ def main() -> None:
     """
     origin = doc[CONTAINER_ORIGIN]
     lst_ids = [int(o.GetName()) for o in op.GetChildren() if o.CheckType(c4d.Ocamera) and o.GetName().isnumeric()]
-    
+
     res = c4d.BaseObject(c4d.Onull)
     res.SetName('footprints')
     # Définir le transformateur entre EPSG:4326 et EPSG:2042
@@ -50,7 +50,15 @@ def main() -> None:
             sp.ResizeObject(len(pts), scnt=nb_segments)
             for id_seg,seg in enumerate(segments):
                 sp.SetSegment(id_seg, seg, closed=True)
-
+                
+        #couleur aléatoire sur la spline
+        col_HSV = c4d.Vector(random.random(),1,1)
+        col_RGB = c4d.utils.HSVToRGB(col_HSV)
+        sp[c4d.ID_BASEOBJECT_USECOLOR] = c4d.ID_BASEOBJECT_USECOLOR_ALWAYS
+        sp[c4d.ID_BASEOBJECT_COLOR] = col_RGB
+        #couleur de l'icone de la spline'
+        sp[c4d.ID_BASELIST_ICON_COLORIZE_MODE] = c4d.ID_BASELIST_ICON_COLORIZE_MODE_CUSTOM
+        sp[c4d.ID_BASELIST_ICON_COLOR] = col_RGB
 
         sp.Message(c4d.MSG_UPDATE)
         sp.SetName(f'{i}_footprint')

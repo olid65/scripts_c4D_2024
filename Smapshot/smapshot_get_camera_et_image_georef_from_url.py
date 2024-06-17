@@ -253,6 +253,16 @@ def main() -> None:
             newTake.SetRenderData(takeData,rd)
             if newTake is None:
                 raise RuntimeError("Failed to add a new take.")
+            
+            #on met le rectangle en enfant de la caméra
+            mg_rect = rect_gltf.GetMg()
+            rect_gltf.InsertUnder(cam)
+            rect_gltf.SetMg(mg_rect)
+
+            #on suprimme le groupe gltf
+            if group_gltf:
+                group_gltf.Remove()
+
 
 
 
