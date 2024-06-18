@@ -230,7 +230,7 @@ def main() -> None:
             doc.AddUndo(c4d.UNDOTYPE_NEWOBJ, cam)
             doc.SetActiveObject(cam)
             #on active la caméra
-            bd = doc.GetActiveBaseDraw()
+            bd = doc.GetRenderBaseDraw()
             bd.SetSceneCamera(cam)
 
             #calcul de Field of view
@@ -270,6 +270,7 @@ def main() -> None:
     tag_mat[c4d.TEXTURETAG_PROJECTION] = c4d.TEXTURETAG_PROJECTION_CAMERAMAP
     tag_mat[c4d.TEXTURETAG_TILE] = False
     tag_mat[c4d.TEXTURETAG_CAMERA_FILMASPECT] = float(px_width)/px_height
+    tag_mat[c4d.TEXTURETAG_CAMERA] = cam
     cam.InsertTag(tag_mat)
 
 
