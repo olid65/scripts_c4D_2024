@@ -52,7 +52,7 @@ def set_new_renderdata(doc,name,width,height):
     rd[c4d.RDATA_YRES] = height
     #ATTENTION NE PAS OUBLIER DE MODIFIER LE RATIO DU FILM SINON NE MET PAS A JOUR !!!!!!!!
     rd[c4d.RDATA_FILMASPECT] = float(width)/height
-    
+
     doc.InsertRenderDataLast(rd)
     rd.Message(c4d.MSG_UPDATE)
     doc.AddUndo(c4d.UNDOTYPE_NEWOBJ, rd)
@@ -253,7 +253,7 @@ def main() -> None:
             newTake.SetRenderData(takeData,rd)
             if newTake is None:
                 raise RuntimeError("Failed to add a new take.")
-            
+
             #on met le rectangle en enfant de la caméra
             mg_rect = rect_gltf.GetMg()
             rect_gltf.InsertUnder(cam)
@@ -262,6 +262,15 @@ def main() -> None:
             #on suprimme le groupe gltf
             if group_gltf:
                 group_gltf.Remove()
+
+    #creation d'un tag texture en mode projection caméra avec le matériau
+    #que l'on pose sur la camera (pour que l'utilisateur puisse le mettre ensuite sur un objet)
+    tag_mat = c4d.BaseTag(c4d.Ttexture)
+    tag_mat[c4d.TEXTURETAG_MATERIAL] = mat
+    tag_mat[c4d.TEXTURETAG_PROJECTION] = c4d.TEXTURETAG_PROJECTION_CAMERAMAP
+    tag_mat[c4d.TEXTURETAG_TILE] = False
+    tag_mat[c4d.TEXTURETAG_CAMERA_FILMASPECT] = float(px_width)/px_height
+    cam.InsertTag(tag_mat)
 
 
 
